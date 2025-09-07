@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双向情感测试障碍量表</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6fa5;
+            --secondary: #6b8cbc;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --gray: #6c757d;
+            --light-blue: #e3f2fd;
+            --light-green: #e8f5e9;
+            --light-yellow: #fffde7;
+            --light-red: #ffebee;
+            --light-purple: #f3e5f5;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e3f2fd 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            min-height: 600px;
+        }
+        
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 25px 0 15px;
+            font-size: 1.6rem;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h3 {
+            color: var(--secondary);
+            margin: 20px 0 12px;
+            font-size: 1.3rem;
+        }
+        
+        h4 {
+            color: var(--dark);
+            margin: 15px 0 10px;
+            font-size: 1.1rem;
+        }
+        
+        .intro {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: var(--light-blue);
+            border-radius: 10px;
+            line-height: 1.8;
+        }
+        
+        .question-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 1.3rem;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .option {
+            padding: 18px 20px;
+            background: #f0f4f8;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background: #dfe8f3;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            background: var(--secondary);
+            color: white;
+            font-weight: bold;
+            border-color: var(--primary);
+        }
+        
+        .option-value {
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .option-label {
+            font-size: 16px;
+            text-align: left;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 30px 0 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .score-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        
+        .total-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+        
+        .level-indicator {
+            height: 15px;
+            background: linear-gradient(90deg, #4caf50, #ffeb3b, #ff9800, #f44336);
+            border-radius: 8px;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .marker {
+            position: absolute;
+            top: -5px;
+            width: 6px;
+            height: 25px;
+            background: black;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        
+        .level-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .factor {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .progress-container {
+            margin: 15px 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .interpretation {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--light-green);
+            border-radius: 10px;
+        }
+        
+        .suggestions {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-yellow);
+            border-radius: 10px;
+        }
+        
+        .risk-report {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-blue);
+            border-radius: 10px;
+        }
+        
+        .trait-analysis {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-purple);
+            border-radius: 10px;
+        }
+        
+        .dimension-analysis {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-red);
+            border-radius: 10px;
+        }
+        
+        .life-impact {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-green);
+            border-radius: 10px;
+        }
+        
+        .strengths {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-blue);
+            border-radius: 10px;
+        }
+        
+        .challenges {
+            margin-top: 25px;
+            padding: 25px;
+            background: var(--light-yellow);
+            border-radius: 10px;
+        }
+        
+        .save-btn {
+            background-color: var(--success);
+            margin-top: 15px;
+        }
+        
+        .reset-btn {
+            background-color: var(--danger);
+            margin-top: 15px;
+        }
+        
+        .history-btn {
+            background-color: var(--info);
+            margin-top: 15px;
+        }
+        
+        .saved-results {
+            margin-top: 30px;
+        }
+        
+        .history-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.4rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+            
+            .option {
+                padding: 15px;
+            }
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .badge-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .badge-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .badge-warning {
+            background: var(--warning);
+            color: black;
+        }
+        
+        .badge-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .icon {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .card {
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .nav-buttons button {
+            flex: 1;
+            margin-top: 0;
+        }
+        
+        .prev-btn {
+            background-color: var(--gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 欢迎屏幕 -->
+        <div class="screen active" id="welcome-screen">
+            <header>
+                <h1><i class="fas fa-brain icon"></i>双向情感测试障碍量表</h1>
+                <p>专业评估工具，帮助您了解自己的情绪健康状态</p>
+            </header>
+            
+            <div class="intro">
+                <p><i class="fas fa-info-circle icon"></i>本量表基于专业心理学研究设计，包含32个问题，评估过去两周内您的感受和行为。请根据实际情况选择最符合的选项。</p>
+                <p><strong><i class="fas fa-exclamation-triangle icon"></i>重要提示：</strong>本测试仅供参考，不能替代专业医疗诊断。如有严重症状，请咨询专业医生。</p>
+            </div>
+            
+            <button id="start-btn"><i class="fas fa-play icon"></i>开始测试</button>
+            
+            <div class="saved-results" id="welcome-history">
+                <h3><i class="fas fa-history icon"></i>历史测试记录</h3>
+                <div id="welcome-history-container"></div>
+            </div>
+            
+            <div class="footer">
+                <p>© 2023 心理健康评估平台 | 本测试仅供参考，不能替代专业医疗诊断</p>
+            </div>
+        </div>
+        
+        <!-- 问题屏幕 -->
+        <div class="screen" id="question-screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-text" id="progress-text">问题 1/32</div>
+            
+            <div class="question-container">
+                <div class="question" id="current-question"></div>
+                
+                <div class="options" id="options-container">
+                    <!-- 选项将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="prev-btn" id="prev-btn"><i class="fas fa-arrow-left icon"></i>上一题</button>
+                <button id="next-btn"><i class="fas fa-arrow-right icon"></i>下一题</button>
+            </div>
+        </div>
+        
+        <!-- 结果屏幕 -->
+        <div class="screen" id="results-screen">
+            <h2><i class="fas fa-chart-line icon"></i>测试结果分析</h2>
+            
+            <div class="score-card">
+                <h3>总体评分</h3>
+                <div class="total-score" id="total-score">0</div>
+                <div class="level-indicator">
+                    <div class="marker" id="score-marker"></div>
+                </div>
+                <div class="level-labels">
+                    <span>正常范围</span>
+                    <span>轻度症状</span>
+                    <span>中度症状</span>
+                    <span>重度症状</span>
+                </div>
+                <p>测试情况: <span id="level-text">暂无</span></p>
+                <p id="score-explanation" class="card"></p>
+            </div>
+            
+            <div class="factor" id="factor-scores">
+                <h3><i class="fas fa-layer-group icon"></i>维度分析结果</h3>
+                <div id="factor-scores-container">
+                    <!-- 因子分数将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <div class="interpretation">
+                <h3><i class="fas fa-search icon"></i>专业解读</h3>
+                <div id="interpretation-container"></div>
+            </div>
+            
+            <div class="risk-report">
+                <h3><i class="fas fa-exclamation-triangle icon"></i>个性化风险分析报告</h3>
+                <div id="risk-container"></div>
+            </div>
+            
+            <div class="trait-analysis">
+                <h3><i class="fas fa-user-shield icon"></i>特质类别分析</h3>
+                <div id="trait-container"></div>
+            </div>
+            
+            <div class="dimension-analysis">
+                <h3><i class="fas fa-chart-pie icon"></i>维度详细解说</h3>
+                <div id="dimension-container"></div>
+            </div>
+            
+            <div class="life-impact">
+                <h3><i class="fas fa-home icon"></i>日常生活影响</h3>
+                <div id="life-impact-container"></div>
+            </div>
+            
+            <div class="strengths">
+                <h3><i class="fas fa-award icon"></i>优势分析</h3>
+                <div id="strengths-container"></div>
+            </div>
+            
+            <div class="challenges">
+                <h3><i class="fas fa-exclamation-circle icon"></i>挑战分析</h3>
+                <div id="challenges-container"></div>
+            </div>
+            
+            <div class="suggestions">
+                <h3><i class="fas fa-hands-helping icon"></i>分析与建议</h3>
+                <div id="suggestions-container"></div>
+            </div>
+            
+            <button class="save-btn" id="save-btn"><i class="fas fa-save icon"></i>保存测试结果</button>
+            <button class="reset-btn" id="reset-btn"><i class="fas fa-redo icon"></i>重新测试</button>
+            <button class="history-btn" id="history-btn"><i class="fas fa-history icon"></i>查看历史记录</button>
+        </div>
+        
+        <!-- 历史记录屏幕 -->
+        <div class="screen" id="history-screen">
+            <h2><i class="fas fa-history icon"></i>历史测试记录</h2>
+            <div id="history-container"></div>
+            
+            <button class="reset-btn" id="back-btn"><i class="fas fa-arrow-left icon"></i>返回主页</button>
+        </div>
+    </div>
+
+    <script>
+        // 问题和因子定义
+        const questions = [
+            { text: "我感到情绪高涨，心情极好", factor: "mania" },
+            { text: "我感到沮丧，情绪低落", factor: "depression" },
+            { text: "我的思维速度比平时快很多", factor: "mania" },
+            { text: "我对未来感到绝望", factor: "depression" },
+            { text: "我比平时更健谈", factor: "mania" },
+            { text: "我失去了对以往爱好的兴趣", factor: "depression" },
+            { text: "我觉得自己特别重要或有特殊使命", factor: "mania" },
+            { text: "我感到疲劳，缺乏精力", factor: "depression" },
+            { text: "我的睡眠需求减少", factor: "mania" },
+            { text: "我的食欲明显改变", factor: "depression" },
+            { text: "我容易分心，注意力不集中", factor: "mania" },
+            { text: "我感到自己毫无价值", factor: "depression" },
+            { text: "我参与高风险活动（如过度消费、危险驾驶）", factor: "mania" },
+            { text: "我有自杀的念头", factor: "depression" },
+            { text: "我的思维跳跃，一个想法接一个想法", factor: "mania" },
+            { text: "我做事犹豫不决", factor: "depression" },
+            { text: "我比平时更活跃或有更多计划", factor: "mania" },
+            { text: "我动作或说话速度变慢", factor: "depression" },
+            { text: "我过于兴奋或心情极好", factor: "mania" },
+            { text: "我感到焦虑或紧张", factor: "anxiety" },
+            { text: "我容易激动或发脾气", factor: "irritability" },
+            { text: "我感到内心不安，无法静坐", factor: "anxiety" },
+            { text: "我对小事过度担忧", factor: "anxiety" },
+            { text: "我因焦虑而回避某些场合", factor: "anxiety" },
+            { text: "我因小事而大发雷霆", factor: "irritability" },
+            { text: "我感到内心紧张或颤抖", factor: "anxiety" },
+            { text: "我对他人缺乏耐心", factor: "irritability" },
+            { text: "我感到肌肉紧张", factor: "anxiety" },
+            { text: "我难以控制自己的怒火", factor: "irritability" },
+            { text: "我感到恐慌，好像要发生可怕的事情", factor: "anxiety" },
+            { text: "我对他人批评过度敏感", factor: "irritability" },
+            { text: "我感到烦躁不安", factor: "irritability" }
+        ];
+
+        const factors = {
+            "mania": { 
+                name: "躁狂症状", 
+                description: "评估情绪高涨、精力过剩、思维加速等症状",
+                detail: "躁狂维度反映情绪高涨、精力旺盛、思维加速和活动增多的程度。适度的躁狂特质可能与创造力、领导力相关，但过高则可能导致冲动行为和判断力下降。"
+            },
+            "depression": { 
+                name: "抑郁症状", 
+                description: "评估情绪低落、兴趣丧失、疲劳无力等症状",
+                detail: "抑郁维度反映情绪低落、兴趣减退、精力下降和消极思维的程度。适度敏感可能增强同理心，但过高则可能导致功能受损和生活质量下降。"
+            },
+            "anxiety": { 
+                name: "焦虑症状", 
+                description: "评估紧张不安、过度担忧、恐慌等症状",
+                detail: "焦虑维度反映对未来的担忧、紧张不安和恐惧的程度。适度焦虑可提高警觉性和准备性，但过高则可能导致回避行为和功能受限。"
+            },
+            "irritability": { 
+                name: "易怒症状", 
+                description: "评估易怒、冲动、情绪不稳定等症状",
+                detail: "易怒维度反映情绪不稳定、易激惹和冲动控制困难的程度。适度表达可能有助于设定界限，但过高则可能导致人际关系冲突和社交困难。"
+            }
+        };
+
+        // 全局变量
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        
+        // 显示屏幕函数
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        // 初始化问题屏幕
+        function initQuestionScreen() {
+            updateProgressBar();
+            document.getElementById('current-question').textContent = questions[currentQuestion].text;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            const optionValues = [
+                { value: 0, label: '从无' },
+                { value: 1, label: '偶尔' },
+                { value: 2, label: '有时' },
+                { value: 3, label: '经常' },
+                { value: 4, label: '总是' }
+            ];
+            
+            optionValues.forEach(option => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                if (answers[currentQuestion] === option.value) {
+                    optionDiv.classList.add('selected');
+                }
+                optionDiv.innerHTML = `
+                    <div class="option-value">${option.value}</div>
+                    <div class="option-label">${option.label}</div>
+                `;
+                
+                optionDiv.addEventListener('click', () => {
+                    optionsContainer.querySelectorAll('.option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    optionDiv.classList.add('selected');
+                    answers[currentQuestion] = option.value;
+                    
+                    // 自动跳转到下一题（除了最后一题）
+                    if (currentQuestion < questions.length - 1) {
+                        setTimeout(() => {
+                            nextQuestion();
+                        }, 300);
+                    }
+                });
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // 更新按钮状态
+            document.getElementById('prev-btn').style.display = currentQuestion === 0 ? 'none' : 'block';
+            document.getElementById('next-btn').textContent = currentQuestion === questions.length - 1 ? '查看结果' : '下一题';
+        }
+        
+        // 更新进度条
+        function updateProgressBar() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            document.getElementById('progress-text').textContent = `问题 ${currentQuestion + 1}/${questions.length}`;
+        }
+        
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                initQuestionScreen();
+            } else {
+                calculateResults();
+            }
+        }
+        
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                initQuestionScreen();
+            }
+        }
+        
+        // 计算得分
+        function calculateResults() {
+            // 检查是否所有问题都已回答
+            if (answers.includes(null)) {
+                alert('请回答所有问题后再查看结果');
+                // 跳转到第一个未回答的问题
+                currentQuestion = answers.findIndex(answer => answer === null);
+                initQuestionScreen();
+                showScreen('question-screen');
+                return;
+            }
+            
+            // 计算总分和各因子分
+            let totalScore = 0;
+            const factorScores = {
+                "mania": 0,
+                "depression": 0,
+                "anxiety": 0,
+                "irritability": 0
+            };
+            
+            answers.forEach((answer, index) => {
+                totalScore += answer;
+                const factor = questions[index].factor;
+                factorScores[factor] += answer;
+            });
+            
+            // 显示总分
+            document.getElementById('total-score').textContent = totalScore;
+            
+            // 更新得分标记位置
+            const marker = document.getElementById('score-marker');
+            const percentage = Math.min(totalScore / (questions.length * 4) * 100, 100);
+            marker.style.left = `${percentage}%`;
+            
+            // 根据总分确定测试情况
+            let levelText, scoreExplanation, interpretation, suggestions, riskReport, traitAnalysis, lifeImpact, strengths, challenges;
+            if (totalScore <= 32) {
+                levelText = "正常范围";
+                scoreExplanation = "您的情绪状态在正常波动范围内，没有明显的双向情感障碍症状。";
+                interpretation = "您的情绪状态在正常范围内，没有明显的双向情感障碍症状。情绪波动在正常范围内，能够较好地应对生活压力。";
+                suggestions = "继续保持健康的生活方式，注意情绪管理，定期进行自我评估。建议保持规律作息、均衡饮食和适度运动。";
+                riskReport = "根据您的测试结果，目前出现双向情感障碍的风险较低。建议继续保持健康的生活习惯和情绪管理策略。";
+                traitAnalysis = "您的情绪稳定性较好，能够有效应对压力，情绪调节能力较强。";
+                lifeImpact = "您的情绪状态对日常生活影响较小，能够维持正常的工作、学习和社交功能。";
+                strengths = "情绪稳定性强，适应能力良好，能够有效处理压力和挫折。";
+                challenges = "需要继续保持情绪健康，注意生活压力管理，避免过度劳累。";
+            } else if (totalScore <= 64) {
+                levelText = "轻度症状";
+                scoreExplanation = "您可能有一些轻微的双向情感障碍症状，建议关注情绪变化。";
+                interpretation = "您可能有一些轻微的双向情感障碍症状，建议关注情绪变化。这些症状可能对日常生活造成一定影响，但仍在可控范围内。";
+                suggestions = "尝试学习压力管理技巧，保持规律作息，如症状持续或加重，建议咨询专业人士。可以尝试正念冥想、放松训练等方法。";
+                riskReport = "您的测试结果显示存在轻度症状，有较低到中度的双向情感障碍风险。建议密切关注情绪变化，必要时寻求专业评估。";
+                traitAnalysis = "您可能具有较高的情绪敏感性，容易受到环境压力影响，但整体情绪调节能力尚可。";
+                lifeImpact = "您的情绪状态可能对日常生活造成轻微影响，偶尔会影响工作效率或人际关系。";
+                strengths = "情感丰富，对他人情绪敏感，可能具有较强的同理心和创造力。";
+                challenges = "需要加强情绪调节技巧，学会识别和应对情绪触发因素，避免情绪波动影响日常生活。";
+            } else if (totalScore <= 96) {
+                levelText = "中度症状";
+                scoreExplanation = "您有明显的双向情感障碍症状，可能对日常生活造成一定影响。";
+                interpretation = "您有明显的双向情感障碍症状，可能对日常生活造成一定影响。这些症状可能需要专业干预来改善生活质量。";
+                suggestions = "建议寻求专业心理咨询或精神科医生的评估，学习情绪调节策略，建立支持系统。认知行为疗法可能对您有帮助。";
+                riskReport = "测试结果显示中度症状，存在明显的双向情感障碍风险。建议尽快进行专业评估，早期干预可以获得更好的治疗效果。";
+                traitAnalysis = "您可能具有较高的情绪反应性和波动性，情绪调节能力需要加强，建议学习更多情绪管理技巧。";
+                lifeImpact = "您的情绪状态可能对日常生活造成明显影响，包括工作效率下降、社交活动减少和人际关系紧张。";
+                strengths = "可能具有丰富的内心世界和情感体验，对艺术和创造性活动有较强感受力。";
+                challenges = "需要专业支持来管理情绪波动，建立健康的生活规律，避免情绪极端化对生活造成更大影响。";
+            } else {
+                levelText = "重度症状";
+                scoreExplanation = "您有严重的双向情感障碍症状，很可能对日常生活造成显著影响。";
+                interpretation = "您有严重的双向情感障碍症状，很可能对日常生活造成显著影响。这些症状需要及时的专业干预和治疗。";
+                suggestions = "强烈建议尽快咨询精神科医生进行专业评估和治疗，同时确保有足够的社会支持。药物治疗结合心理治疗效果更佳。";
+                riskReport = "您的测试结果显示重度症状，双向情感障碍的风险很高。请尽快寻求专业帮助，早期治疗可以显著改善预后。";
+                traitAnalysis = "您可能具有极高的情绪敏感性和反应强度，情绪调节能力受损明显，需要专业支持来改善情绪管理能力。";
+                lifeImpact = "您的情绪状态很可能对日常生活造成严重干扰，可能影响工作能力、社交功能和日常生活自理能力。";
+                strengths = "在适当的治疗和支持下，可能将情感强度转化为创造性产出或对他人帮助的理解力。";
+                challenges = "迫切需要专业治疗和支持，需要建立稳定的治疗联盟，学习危机管理技巧，防止症状进一步恶化。";
+            }
+            
+            document.getElementById('level-text').textContent = levelText;
+            document.getElementById('score-explanation').textContent = scoreExplanation;
+            
+            // 显示各因子得分
+            const factorScoresContainer = document.getElementById('factor-scores-container');
+            factorScoresContainer.innerHTML = '';
+            
+            for (const [factor, score] of Object.entries(factorScores)) {
+                const maxScore = questions.filter(q => q.factor === factor).length * 4;
+                const percentage = (score / maxScore) * 100;
+                
+                let factorLevel = "正常";
+                let factorClass = "badge-success";
+                if (percentage > 75) {
+                    factorLevel = "严重";
+                    factorClass = "badge-danger";
+                } else if (percentage > 50) {
+                    factorLevel = "中度";
+                    factorClass = "badge-warning";
+                } else if (percentage > 25) {
+                    factorLevel = "轻度";
+                    factorClass = "badge-primary";
+                }
+                
+                const factorEl = document.createElement('div');
+                factorEl.className = 'progress-container';
+                factorEl.innerHTML = `
+                    <div class="progress-label">
+                        <span>${factors[factor].name} <span class="badge ${factorClass}">${factorLevel}</span></span>
+                        <span>${score} / ${maxScore}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${percentage}%"></div>
+                    </div>
+                `;
+                
+                factorScoresContainer.appendChild(factorEl);
+            }
+            
+            // 显示解释
+            document.getElementById('interpretation-container').innerHTML = `<p>${interpretation}</p>`;
+            
+            // 显示风险报告
+            document.getElementById('risk-container').innerHTML = `<p>${riskReport}</p>`;
+            
+            // 显示特质分析
+            document.getElementById('trait-container').innerHTML = `<p>${traitAnalysis}</p>`;
+            
+            // 显示维度详细解说
+            let dimensionHtml = '';
+            for (const [factor, score] of Object.entries(factorScores)) {
+                const maxScore = questions.filter(q => q.factor === factor).length * 4;
+                const percentage = (score / maxScore) * 100;
+                
+                dimensionHtml += `
+                    <div class="card">
+                        <h4>${factors[factor].name} (${score}/${maxScore})</h4>
+                        <p>${factors[factor].detail}</p>
+                        <p>您的得分表明${percentage > 50 ? '较高' : '相对较低'}的${factors[factor].name.toLowerCase()}水平。</p>
+                    </div>
+                `;
+            }
+            document.getElementById('dimension-container').innerHTML = dimensionHtml;
+            
+            // 显示生活影响
+            document.getElementById('life-impact-container').innerHTML = `<p>${lifeImpact}</p>`;
+            
+            // 显示优势分析
+            document.getElementById('strengths-container').innerHTML = `<p>${strengths}</p>`;
+            
+            // 显示挑战分析
+            document.getElementById('challenges-container').innerHTML = `<p>${challenges}</p>`;
+            
+            // 显示建议
+            document.getElementById('suggestions-container').innerHTML = `
+                <p>${suggestions}</p>
+                <div style="margin-top: 15px;">
+                    <h4>具体建议：</h4>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>保持规律的作息时间，确保充足睡眠</li>
+                        <li>进行适度的体育锻炼，如每天30分钟步行</li>
+                        <li>学习放松技巧，如深呼吸和冥想</li>
+                        <li>建立支持系统，与家人朋友保持联系</li>
+                        <li>如有需要，寻求专业心理健康服务</li>
+                    </ul>
+                </div>
+            `;
+            
+            // 保存当前得分数据以供保存
+            window.currentResult = {
+                totalScore,
+                factorScores,
+                levelText,
+                scoreExplanation,
+                interpretation,
+                suggestions,
+                riskReport,
+                traitAnalysis,
+                lifeImpact,
+                strengths,
+                challenges,
+                date: new Date().toLocaleString()
+            };
+            
+            // 显示结果屏幕
+            showScreen('results-screen');
+        }
+        
+        // 保存结果
+        function saveResults() {
+            if (!window.currentResult) return;
+            
+            // 获取历史记录或初始化
+            const history = JSON.parse(localStorage.getItem('bipolarTestHistory') || '[]');
+            
+            // 添加新记录
+            history.push(window.currentResult);
+            
+            // 保存到本地存储
+            localStorage.setItem('bipolarTestHistory', JSON.stringify(history));
+            
+            alert('测试结果已保存！');
+            showHistory();
+        }
+        
+        // 显示历史记录
+        function showHistory() {
+            const history = JSON.parse(localStorage.getItem('bipolarTestHistory') || '[]');
+            const historyContainer = document.getElementById('history-container');
+            const welcomeHistoryContainer = document.getElementById('welcome-history-container');
+            
+            if (history.length === 0) {
+                historyContainer.innerHTML = '<p>暂无历史记录</p>';
+                welcomeHistoryContainer.innerHTML = '<p>暂无历史记录</p>';
+                return;
+            }
+            
+            historyContainer.innerHTML = '';
+            welcomeHistoryContainer.innerHTML = '';
+            
+            // 按时间倒序显示
+            history.reverse().forEach((result, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                let factorsHtml = '';
+                for (const [factor, score] of Object.entries(result.factorScores)) {
+                    const maxScore = questions.filter(q => q.factor === factor).length * 4;
+                    factorsHtml += `<p>${factors[factor].name}: ${score}/${maxScore}</p>`;
+                }
+                
+                historyItem.innerHTML = `
+                    <h4>测试时间: ${result.date}</h4>
+                    <p>总分: ${result.totalScore} (${result.levelText})</p>
+                    ${factorsHtml}
+                    <button class="view-detail" data-index="${history.length - 1 - index}">查看详情</button>
+                `;
+                
+                historyContainer.appendChild(historyItem);
+                
+                // 欢迎页面的历史记录只显示最近3条
+                if (index < 3) {
+                    const welcomeItem = historyItem.cloneNode(true);
+                    welcomeHistoryContainer.appendChild(welcomeItem);
+                }
+            });
+            
+            // 添加查看详情事件
+            document.querySelectorAll('.view-detail').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    const result = history[history.length - 1 - index];
+                    
+                    // 显示详情
+                    document.getElementById('total-score').textContent = result.totalScore;
+                    document.getElementById('level-text').textContent = result.levelText;
+                    document.getElementById('score-explanation').textContent = result.scoreExplanation;
+                    
+                    const marker = document.getElementById('score-marker');
+                    const percentage = Math.min(result.totalScore / (questions.length * 4) * 100, 100);
+                    marker.style.left = `${percentage}%`;
+                    
+                    const factorScoresContainer = document.getElementById('factor-scores-container');
+                    factorScoresContainer.innerHTML = '';
+                    
+                    for (const [factor, score] of Object.entries(result.factorScores)) {
+                        const maxScore = questions.filter(q => q.factor === factor).length * 4;
+                        const percentage = (score / maxScore) * 100;
+                        
+                        let factorLevel = "正常";
+                        let factorClass = "badge-success";
+                        if (percentage > 75) {
+                            factorLevel = "严重";
+                            factorClass = "badge-danger";
+                        } else if (percentage > 50) {
+                            factorLevel = "中度";
+                            factorClass = "badge-warning";
+                        } else if (percentage > 25) {
+                            factorLevel = "轻度";
+                            factorClass = "badge-primary";
+                        }
+                        
+                        const factorEl = document.createElement('div');
+                        factorEl.className = 'progress-container';
+                        factorEl.innerHTML = `
+                            <div class="progress-label">
+                                <span>${factors[factor].name} <span class="badge ${factorClass}">${factorLevel}</span></span>
+                                <span>${score} / ${maxScore}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        `;
+                        
+                        factorScoresContainer.appendChild(factorEl);
+                    }
+                    
+                    document.getElementById('interpretation-container').innerHTML = `<p>${result.interpretation}</p>`;
+                    document.getElementById('risk-container').innerHTML = `<p>${result.riskReport}</p>`;
+                    document.getElementById('trait-container').innerHTML = `<p>${result.traitAnalysis}</p>`;
+                    
+                    let dimensionHtml = '';
+                    for (const [factor, score] of Object.entries(result.factorScores)) {
+                        const maxScore = questions.filter(q => q.factor === factor).length * 4;
+                        dimensionHtml += `
+                            <div class="card">
+                                <h4>${factors[factor].name} (${score}/${maxScore})</h4>
+                                <p>${factors[factor].detail}</p>
+                            </div>
+                        `;
+                    }
+                    document.getElementById('dimension-container').innerHTML = dimensionHtml;
+                    
+                    document.getElementById('life-impact-container').innerHTML = `<p>${result.lifeImpact}</p>`;
+                    document.getElementById('strengths-container').innerHTML = `<p>${result.strengths}</p>`;
+                    document.getElementById('challenges-container').innerHTML = `<p>${result.challenges}</p>`;
+                    document.getElementById('suggestions-container').innerHTML = `<p>${result.suggestions}</p>`;
+                    
+                    showScreen('results-screen');
+                });
+            });
+            
+            showScreen('history-screen');
+        }
+        
+        // 重置测试
+        function resetTest() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            showScreen('welcome-screen');
+            initWelcomeHistory();
+        }
+        
+        // 初始化欢迎页面历史记录
+        function initWelcomeHistory() {
+            const history = JSON.parse(localStorage.getItem('bipolarTestHistory') || '[]');
+            const welcomeHistoryContainer = document.getElementById('welcome-history-container');
+            
+            if (history.length === 0) {
+                welcomeHistoryContainer.innerHTML = '<p>暂无历史记录</p>';
+                return;
+            }
+            
+            welcomeHistoryContainer.innerHTML = '';
+            
+            // 按时间倒序显示最近3条记录
+            history.reverse().slice(0, 3).forEach((result, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                historyItem.innerHTML = `
+                    <h4>测试时间: ${result.date}</h4>
+                    <p>总分: ${result.totalScore} (${result.levelText})</p>
+                    <button class="view-detail" data-index="${history.length - 1 - index}">查看详情</button>
+                `;
+                
+                welcomeHistoryContainer.appendChild(historyItem);
+            });
+            
+            // 添加查看详情事件
+            document.querySelectorAll('#welcome-history-container .view-detail').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    const history = JSON.parse(localStorage.getItem('bipolarTestHistory') || '[]');
+                    const result = history[history.length - 1 - index];
+                    
+                    // 显示详情
+                    document.getElementById('total-score').textContent = result.totalScore;
+                    document.getElementById('level-text').textContent = result.levelText;
+                    document.getElementById('score-explanation').textContent = result.scoreExplanation;
+                    
+                    const marker = document.getElementById('score-marker');
+                    const percentage = Math.min(result.totalScore / (questions.length * 4) * 100, 100);
+                    marker.style.left = `${percentage}%`;
+                    
+                    const factorScoresContainer = document.getElementById('factor-scores-container');
+                    factorScoresContainer.innerHTML = '';
+                    
+                    for (const [factor, score] of Object.entries(result.factorScores)) {
+                        const maxScore = questions.filter(q => q.factor === factor).length * 4;
+                        const percentage = (score / maxScore) * 100;
+                        
+                        let factorLevel = "正常";
+                        let factorClass = "badge-success";
+                        if (percentage > 75) {
+                            factorLevel = "严重";
+                            factorClass = "badge-danger";
+                        } else if (percentage > 50) {
+                            factorLevel = "中度";
+                            factorClass = "badge-warning";
+                        } else if (percentage > 25) {
+                            factorLevel = "轻度";
+                            factorClass = "badge-primary";
+                        }
+                        
+                        const factorEl = document.createElement('div');
+                        factorEl.className = 'progress-container';
+                        factorEl.innerHTML = `
+                            <div class="progress-label">
+                                <span>${factors[factor].name} <span class="badge ${factorClass}">${factorLevel}</span></span>
+                                <span>${score} / ${maxScore}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        `;
+                        
+                        factorScoresContainer.appendChild(factorEl);
+                    }
+                    
+                    document.getElementById('interpretation-container').innerHTML = `<p>${result.interpretation}</p>`;
+                    document.getElementById('risk-container').innerHTML = `<p>${result.riskReport}</p>`;
+                    document.getElementById('trait-container').innerHTML = `<p>${result.traitAnalysis}</p>`;
+                    
+                    let dimensionHtml = '';
+                    for (const [factor, score] of Object.entries(result.factorScores)) {
+                        const maxScore = questions.filter(q => q.factor === factor).length * 4;
+                        dimensionHtml += `
+                            <div class="card">
+                                <h4>${factors[factor].name} (${score}/${maxScore})</h4>
+                                <p>${factors[factor].detail}</p>
+                            </div>
+                        `;
+                    }
+                    document.getElementById('dimension-container').innerHTML = dimensionHtml;
+                    
+                    document.getElementById('life-impact-container').innerHTML = `<p>${result.lifeImpact}</p>`;
+                    document.getElementById('strengths-container').innerHTML = `<p>${result.strengths}</p>`;
+                    document.getElementById('challenges-container').innerHTML = `<p>${result.challenges}</p>`;
+                    document.getElementById('suggestions-container').innerHTML = `<p>${result.suggestions}</p>`;
+                    
+                    showScreen('results-screen');
+                });
+            });
+        }
+        
+        // 初始化事件监听
+        function initEventListeners() {
+            document.getElementById('start-btn').addEventListener('click', () => {
+                currentQuestion = 0;
+                initQuestionScreen();
+                showScreen('question-screen');
+            });
+            
+            document.getElementById('prev-btn').addEventListener('click', prevQuestion);
+            document.getElementById('next-btn').addEventListener('click', nextQuestion);
+            document.getElementById('save-btn').addEventListener('click', saveResults);
+            document.getElementById('reset-btn').addEventListener('click', resetTest);
+            document.getElementById('history-btn').addEventListener('click', showHistory);
+            document.getElementById('back-btn').addEventListener('click', () => {
+                showScreen('welcome-screen');
+            });
+        }
+        
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            initEventListeners();
+            initWelcomeHistory();
+        });
+    </script>
+</body>
+</html>
